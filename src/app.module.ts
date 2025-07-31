@@ -10,6 +10,7 @@ import { DepartmentsModule } from './modules/departments/departments.module';
 import { EmployeesModule } from './modules/employees/employees.module';
 import { LeaveModule } from './modules/leave/leave.module';
 import { AttendanceModule } from './modules/attendance/attendance.module';
+import { DatabaseModule } from './core/database/database.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { AttendanceModule } from './modules/attendance/attendance.module';
     SequelizeModule.forRootAsync({
       useFactory: databaseConfig,
     }),
+    DatabaseModule,
     UsersModule,
     AuthModule,
     DepartmentsModule,

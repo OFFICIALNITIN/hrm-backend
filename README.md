@@ -96,3 +96,274 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+
+# HRM Backend
+
+A comprehensive Human Resource Management System backend built with NestJS and PostgreSQL.
+
+## Features
+
+- User authentication and authorization
+- Employee management
+- Department management
+- Leave request management
+- Attendance tracking
+- RESTful API with Swagger documentation
+- Database migrations and seeding
+- Cloud-ready deployment
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- PostgreSQL 12+
+- npm or yarn
+
+### Local Development
+
+1. **Clone the repository**
+
+   ```bash
+   git clone <repository-url>
+   cd hrm-backend
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Set up environment variables**
+
+   ```bash
+   cp env.example .env
+   # Edit .env with your database credentials
+   ```
+
+4. **Run with Docker (recommended)**
+
+   ```bash
+   docker-compose up --build
+   ```
+
+5. **Or run locally**
+   ```bash
+   # Start PostgreSQL first, then:
+   npm run db:setup
+   npm run start:dev
+   ```
+
+## Database Setup
+
+### Automatic Setup (Recommended)
+
+The application automatically handles database setup when you set these environment variables:
+
+```env
+RUN_MIGRATIONS=true
+RUN_SEEDS=true
+```
+
+### Manual Setup
+
+1. **Create database**
+
+   ```bash
+   npm run db:create
+   ```
+
+2. **Run migrations**
+
+   ```bash
+   npm run db:migrate
+   ```
+
+3. **Seed initial data**
+   ```bash
+   npm run db:seed
+   ```
+
+### Database Scripts
+
+- `npm run db:migrate` - Run pending migrations
+- `npm run db:migrate:undo` - Undo last migration
+- `npm run db:migrate:undo:all` - Undo all migrations
+- `npm run db:seed` - Run all seeders
+- `npm run db:seed:undo` - Undo all seeds
+- `npm run db:setup` - Run migrations and seeds
+- `npm run db:reset` - Reset database (undo all + setup)
+
+## Cloud Deployment
+
+### Environment Variables for Production
+
+```env
+NODE_ENV=production
+PORT=3000
+FRONTEND_URL=https://your-frontend-domain.com
+
+# Database Configuration
+DB_DIALECT=postgres
+DB_HOST=your-db-host
+DB_PORT=5432
+DB_USERNAME=your-db-username
+DB_PASSWORD=your-db-password
+DB_DATABASE=your-db-name
+
+# Database Setup
+RUN_MIGRATIONS=true
+RUN_SEEDS=true
+WAIT_FOR_DB=true
+
+# JWT Configuration
+JWT_SECRET=your-secure-jwt-secret
+JWT_EXPIRES_IN=24h
+```
+
+### Deployment Options
+
+#### 1. Docker Deployment
+
+```bash
+# Build and run with Docker
+docker build -t hrm-backend .
+docker run -p 3000:3000 --env-file .env hrm-backend
+```
+
+#### 2. Manual Deployment
+
+```bash
+# Install dependencies
+npm ci --only=production
+
+# Build application
+npm run build
+
+# Run deployment script
+chmod +x scripts/deploy.sh
+./scripts/deploy.sh
+```
+
+#### 3. Platform-Specific Deployment
+
+**Heroku:**
+
+```bash
+# Add PostgreSQL addon
+heroku addons:create heroku-postgresql:hobby-dev
+
+# Deploy
+git push heroku main
+
+# Run migrations
+heroku run npm run db:migrate
+heroku run npm run db:seed
+```
+
+**AWS/EC2:**
+
+```bash
+# Use the deployment script
+./scripts/deploy.sh
+```
+
+**Vercel/Railway/Render:**
+
+- Set environment variables in platform dashboard
+- Deploy using Git integration
+- The app will automatically run migrations and seeds on startup
+
+### Health Check
+
+The application provides a health check endpoint:
+
+```
+GET /health
+```
+
+Response:
+
+```json
+{
+  "status": "ok",
+  "timestamp": "2024-01-01T00:00:00.000Z",
+  "database": "connected"
+}
+```
+
+## API Documentation
+
+Once the application is running, visit:
+
+- Swagger UI: `http://localhost:3000/api-docs`
+- Health Check: `http://localhost:3000/health`
+
+## Default Admin User
+
+After running seeds, you can login with:
+
+- Email: `admin@hrm.com`
+- Password: `admin123`
+
+**Important:** Change the default password in production!
+
+## Development
+
+### Project Structure
+
+```
+src/
+├── auth/           # Authentication module
+├── users/          # User management
+├── modules/        # Business modules
+│   ├── departments/
+│   ├── employees/
+│   ├── leave/
+│   └── attendance/
+├── core/           # Core services
+│   └── database/   # Database service
+├── config/         # Configuration
+├── migrations/     # Database migrations
+└── seeders/        # Database seeders
+```
+
+### Adding New Migrations
+
+```bash
+npx sequelize-cli migration:generate --name migration-name
+```
+
+### Adding New Seeders
+
+```bash
+npx sequelize-cli seed:generate --name seeder-name
+```
+
+## Troubleshooting
+
+### Database Connection Issues
+
+1. Check environment variables
+2. Ensure database is running
+3. Verify network connectivity
+4. Check SSL configuration for cloud databases
+
+### Migration Issues
+
+1. Check migration files for syntax errors
+2. Ensure database exists
+3. Verify user permissions
+4. Check for conflicting migrations
+
+### Seed Issues
+
+1. Ensure migrations have run first
+2. Check seed file syntax
+3. Verify foreign key relationships
+4. Check for duplicate data
+
+## License
+
+This project is licensed under the MIT License.

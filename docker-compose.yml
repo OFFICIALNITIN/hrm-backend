@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USERNAME=hrm_user
+      - DB_PASSWORD=hrm_password
+      - DB_DATABASE=hrm_db
+      - RUN_MIGRATIONS=true
+      - RUN_SEEDS=true
+      - WAIT_FOR_DB=true
+    depends_on:
+      - postgres
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run start:dev
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=hrm_user
+      - POSTGRES_PASSWORD=hrm_password
+      - POSTGRES_DB=hrm_db
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U hrm_user -d hrm_db']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  postgres_data:
